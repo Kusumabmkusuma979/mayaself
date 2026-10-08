@@ -183,7 +183,7 @@ export default function MessageList({
                 {!isUser && msg.thoughtNote && (
                   <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-slate-400 italic">
                     <Activity className="w-3 h-3 text-cyan-400 shrink-0" />
-                    <span>Simulated focus: {msg.thoughtNote}</span>
+                   <span>Focus: {msg.thoughtNote}</span>
                   </div>
                 )}
 
