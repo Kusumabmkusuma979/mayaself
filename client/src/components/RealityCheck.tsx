@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Sparkles, RefreshCw, AlertCircle } from 'lucide-react';
 import MayaAvatar from './MayaAvatar';
+import { getApiUrl } from '../utils/api';
 
 export interface RealityCheckResult {
   feelings: string;
@@ -83,21 +84,26 @@ export const RealityCheck: React.FC<RealityCheckProps> = ({
     try {
       // Attempt backend endpoint
       let response: Response | null = null;
+      const realityCheckUrl = getApiUrl('/api/reality-check');
       try {
-        response = await fetch('/api/reality-check', {
+        response = await fetch(realityCheckUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text: textToAnalyze }),
         });
-      } catch {
-        // Direct port 5000 fallback
-        try {
-          response = await fetch('http://127.0.0.1:5000/api/reality-check', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: textToAnalyze }),
-          });
-        } catch {
+      } catch (fetchErr) {
+        // Direct port 5000 fallback only during local development
+        if (import.meta.env.DEV) {
+          try {
+            response = await fetch('http://127.0.0.1:5000/api/reality-check', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ text: textToAnalyze }),
+            });
+          } catch {
+            response = null;
+          }
+        } else {
           response = null;
         }
       }

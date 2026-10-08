@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { getApiUrl } from '../utils/api';
 
 const STORAGE_KEY = 'maya_chat_history_v1';
 
@@ -63,9 +64,10 @@ export function useChat() {
     setError(null);
 
     try {
+      const chatUrl = getApiUrl('/api/chat');
       let response;
       try {
-        response = await fetch('/api/chat', {
+        response = await fetch(chatUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -73,17 +75,21 @@ export function useChat() {
             history: newMessages.map(m => ({ sender: m.sender, text: m.text }))
           }),
         });
-      } catch (proxyErr) {
-        // Fallback to direct backend address if proxy fails
-        console.warn('Relative /api/chat failed, trying http://127.0.0.1:5000/api/chat direct:', proxyErr);
-        response = await fetch('http://127.0.0.1:5000/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: text.trim(),
-            history: newMessages.map(m => ({ sender: m.sender, text: m.text }))
-          }),
-        });
+      } catch (fetchErr) {
+        // In local development only, attempt direct localhost fallback if dev proxy is down
+        if (import.meta.env.DEV) {
+          console.warn('Relative /api/chat failed in DEV, trying local 127.0.0.1:5000 fallback:', fetchErr);
+          response = await fetch('http://127.0.0.1:5000/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: text.trim(),
+              history: newMessages.map(m => ({ sender: m.sender, text: m.text }))
+            }),
+          });
+        } else {
+          throw fetchErr;
+        }
       }
 
       if (!response.ok) {

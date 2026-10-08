@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, Mic, MicOff, Compass, AlertCircle, X } from 'lucide-react';
+import { getApiUrl } from '../utils/api';
 
 export default function MessageInput({
   onSendMessage,
@@ -110,7 +111,7 @@ export default function MessageInput({
       reader.onloadend = async () => {
         try {
           const base64Data = reader.result.split(',')[1];
-          const response = await fetch('/api/transcribe', {
+          const response = await fetch(getApiUrl('/api/transcribe'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
