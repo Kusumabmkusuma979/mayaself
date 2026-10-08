@@ -1,16 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { generateMayaResponse, generateRealityCheck, transcribeAudio, initializeGeminiClient } from './services/gemini.js';
 
 // Load environment variables (supports server/.env as well as root .env in Netlify)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config();
-
 const app = express();
 
 // Middleware
