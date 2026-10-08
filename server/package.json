@@ -1,0 +1,17 @@
+{
+  "name": "maya-server",
+  "version": "1.0.0",
+  "description": "Express backend for MAYA AI Companion with Gemini API integration",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
