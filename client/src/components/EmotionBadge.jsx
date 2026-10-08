@@ -24,7 +24,7 @@ export default function EmotionBadge({ emotion = 'thoughtful', onOpenDisclaimer,
           style={{ backgroundColor: config.primaryColor }}
         />
         <span className="font-semibold tracking-wide">
-          Simulated Emotion: {config.label}
+         Emotion: {config.label}
         </span>
         <span className="text-[10px] opacity-75 hidden sm:inline">
           ({Math.round((intensity || 0.85) * 100)}%)
